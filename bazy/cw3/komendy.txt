@@ -1,0 +1,46 @@
+create table postac (id_postaci int primary key auto_increment, nazwa varchar(40), rodzaj enum('Wiking', 'Ptak', 'Kobieta'), data_ur date, wiek int unsigned);
+insert into postac values ('1', 'Bjorn', 'Wiking', '1980-11-12', '40');
+insert into postac values ('2', 'Drozd', 'Ptak', '1980-11-12', '40');
+insert into postac values ('3', 'Tesciowa', 'Kobieta', '1940-11-12', '80');
+update postac set data_ur = '1932-11-12', wiek = '88' where id_postaci = 3;
+create table walizka (id_walizki int primary key auto_increment, pojemnosc int unsigned, kolor enum('rozowy','czerwony','teczowy','zolty'),id_wlasciciela int);
+alter table walizka add foreign key (id_wlasciciela) references postac(id_postaci) on delete cascade;
+alter table walizka alter kolor set default 'rozowy';alter table walizka alter kolor set default 'rozowy';
+nsert into walizka values ('1', '100', 'rozowy', '1');
+insert into walizka values ('2', '100', 'teczowy', '3');
+create table izba(adres_budynku varchar(50), nazwa_izby varchar(50), metraz int unsigned, wlasciciel int, primary key (adres_budynku, nazwa_izby), foreign key (wlasciciel) references postac(id_postaci) on delete set null);
+alter table izba drop foreign key izba_ibfk_1;
+alter table izba drop column wlasciciel;
+alter table izba add kolor_izby varchar(20) default 'czarny';
+alter table izba add wlasciciel int;
+alter table izba add constraint fk_wlasciciel foreign key (wlasciciel) references postac(id_postaci) on delete set null;
+insert into izba values ('Akacjowa 3', 'spizarnia', '500' , 'rozowy', '3');
+create table przetwory(id_przetworu int primary key auto_increment, rok_produkcji year, id_wykonawcy int, zawartosc varchar(100), dodatek varchar(50) default 'papryczka chilli', id_konsumenta int);
+alter table przetwory alter rok_produkcji set default '1902'; //nie pozwalało ustawić roku wcześniejszego niż 1900
+alter table przetwory alter rok_produkcji set default '1902';
+alter table przetwory add foreign key (id_wykonawcy) references postac(id_postaci);
+alter table przetwory add foreign key (id_konsumenta) references postac(id_postaci);
+insert into przetwory values ('1', '2020', '3', 'bigos', 'papryczka chilli', '1');
+insert into postac values('4', 'Edgar', 'Wiking', '1980-11-19', '40');
+insert into postac values ('5', 'Finn', 'Wiking', '1985-11-19', '35');
+insert into postac values ('6', 'Magnus', 'Wiking', '1987-11-19', '33');
+insert into postac values ('7', 'Olaf', 'Wiking', '1978-11-19', '42');
+insert into postac values ('8', 'Osvald', 'Wiking', '1973-11-19', '47');
+create table statek (nazwa_statku varchar(50) primary key, rodzaj_statku enum('Byrding', 'Drakkar', 'Knara', 'Langskip', 'Sneka'), data_wodowania date, max_ladownosc int unsigned);
+insert into statek values ('Svan', 'Knara', '1540-10-20', '5000');
+insert into statek values ('Thor', 'Drakkar', '1320-09-30', '3000');
+alter table postac add funkcja varchar(40);
+update postac set funkcja = 'Kapitan' where nazwa = 'Bjorn';
+alter table postac add statek varchar(50);
+alter table postac add foreign key (statek) references statek(nazwa_statku);
+update postac set statek  = 'Svan' where nazwa = 'Bjorn';
+update postac set statek  = 'Svan' where nazwa = 'Drozd';
+update postac set statek  = 'Svan' where nazwa = 'Edgar';
+update postac set statek  = 'Svan' where nazwa = 'Finn';
+update postac set statek  = 'Thor' where nazwa = 'Magnus';
+update postac set statek  = 'Thor' where nazwa = 'Olaf';
+update postac set statek  = 'Thor' where nazwa = 'Osvald';
+delete from izba where nazwa_izby = 'spizarnia';
+drop table izba;
+
+
