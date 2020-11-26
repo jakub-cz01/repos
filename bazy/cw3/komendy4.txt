@@ -1,0 +1,7 @@
+select avg(waga) as sredniaWaga from kreatura where rodzaj = 'wiking';
+select rodzaj, count(rodzaj) as ilosc, avg(waga) as sredniaWaga from krea
+tura group by rodzaj;
+select rodzaj, avg(2020-year(dataUR)) as sredniWiek from kreatura group b
+y rodzaj;
+select rodzaj, sum(waga)  as sumaWag from zasob group by rodzaj;   
+select rodzaj, avg(waga) as sredniaWaga from zasob group by rodzaj having sum(ilosc) >= 4 and sum(waga) > 10;
