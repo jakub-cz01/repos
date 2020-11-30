@@ -4,4 +4,8 @@ tura group by rodzaj;
 select rodzaj, avg(2020-year(dataUR)) as sredniWiek from kreatura group b
 y rodzaj;
 select rodzaj, sum(waga)  as sumaWag from zasob group by rodzaj;   
-select rodzaj, avg(waga) as sredniaWaga from zasob group by rodzaj having sum(ilosc) >= 4 and sum(waga) > 10;
+select nazwa, avg(waga) as sredniaWaga from zasob group by nazwa having sum(ilosc) >= 4 and sum(waga) > 10;
+select rodzaj, count(nazwa) as iloscNazw from zasob group by rodzaj having sum(ilosc)>1;
+select kreatura.nazwa,sum(ekwipunek.ilosc) as ilosc from ekwipunek join kreatura on ekwipunek.idKreatury = kreatura.idKreatury group by kreatura.nazwa;
+select kreatura.nazwa as nazwaKreatury, zasob.nazwa as nazwaZasobu from ekwipunek join kreatura on kreatura.idKreatury = ekwipunek.idKreatury join zasob
+on zasob.idZasobu = ekwipunek.idZasobu order by nazwaKreatury;

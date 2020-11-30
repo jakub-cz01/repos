@@ -3,7 +3,7 @@ create table zasob  as select * from wikingowie.zasob;
 create table ekwipunek  as select * from wikingowie.ekwipunek;
 select * from zasob;
 select * from zasob where rodzaj = 'jedzenie';
-select idZasobu, ilosc from zasob join kreatura on kreatura.idKreatury in('1', '3', '5');
+select idKreatury, idZasobu, ilosc from ekwipunek where idKreatury in('1','3','5');
 select * from kreatura where rodzaj != 'wiedzma' and udzwig > 50;
 select * from zasob where waga between 2 and 5;
 select * from kreatura where nazwa like '%or%' and udzwig between 30 and 70;
