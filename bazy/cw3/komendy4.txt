@@ -1,11 +1,14 @@
 select avg(waga) as sredniaWaga from kreatura where rodzaj = 'wiking';
-select rodzaj, count(rodzaj) as ilosc, avg(waga) as sredniaWaga from krea
-tura group by rodzaj;
-select rodzaj, avg(2020-year(dataUR)) as sredniWiek from kreatura group b
-y rodzaj;
+select rodzaj, count(rodzaj) as ilosc, avg(waga) as sredniaWaga from kreatura group by rodzaj;
+select rodzaj, avg(2020-year(dataUR)) as sredniWiek from kreatura group by rodzaj;
 select rodzaj, sum(waga)  as sumaWag from zasob group by rodzaj;   
 select nazwa, avg(waga) as sredniaWaga from zasob group by nazwa having sum(ilosc) >= 4 and sum(waga) > 10;
 select rodzaj, count(nazwa) as iloscNazw from zasob group by rodzaj having sum(ilosc)>1;
 select kreatura.nazwa,sum(ekwipunek.ilosc) as ilosc from ekwipunek join kreatura on ekwipunek.idKreatury = kreatura.idKreatury group by kreatura.nazwa;
-select kreatura.nazwa as nazwaKreatury, zasob.nazwa as nazwaZasobu from ekwipunek join kreatura on kreatura.idKreatury = ekwipunek.idKreatury join zasob
-on zasob.idZasobu = ekwipunek.idZasobu order by nazwaKreatury;
+select kreatura.nazwa as nazwaKreatury, zasob.nazwa as nazwaZasobu from ekwipunek join kreatura on kreatura.idKreatury = ekwipunek.idKreatury join zasob on zasob.idZasobu = ekwipunek.idZasobu order by nazwaKreatury;
+select kreatura.nazwa, ekwipunek.idKreatury from kreatura left join ekwipunek on kreatura.idKreatury = ekwipunek.idKreatury having ekwipunek.idKreatury is null;
+select kreatura.nazwa as nazwaKreatury, zasob.nazwa as nazwaZasobu from ekwipunek join kreatura on kreatura.idKreatury = ekwipunek.idKreatury and kreatura.rodzaj = 'wiking' and kreatura.dataUR like '167%' join zasob on zasob.idZasobu = ekwipunek.idZasobu order by nazwaKreatury;
+select kreatura.nazwa from ekwipunek join kreatura on kreatura.idKreatury = ekwipunek.idKreatury join zasob on zasob.idZasobu = ekwipunek.idZasobu and zasob.rodzaj = 'jedzenie' order by kreatura.dataUr desc limit 5;
+select k.nazwa as Kreatura_1, l.nazwa as Kreatura_2 from kreatura k join kreatura l on k.idKreatury = l.idKreatury + 5;
+select k.rodzaj, avg(z.waga) as sredniaWagaZasobow from ekwipunek e join kreatura k on k.idKreatury = e.idKreatury and k.rodzaj != 'malpa' and k.rodzaj != 'waz' join zasob z on z.idZasobu = e.idKreatury group by k.rodzaj having sum(e.ilosc) < 30;
+
