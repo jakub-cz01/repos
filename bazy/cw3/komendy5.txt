@@ -1,0 +1,10 @@
+create table kreatura as select * from wikingowie.kreatura;
+create table uczestnicy as select * from wikingowie.uczestnicy;
+create table etapy_wyprawy as select * from wikingowie.etapy_wyprawy;
+create table sektor as select * from wikingowie.sektor;
+create table wyprawa as select * from wikingowie.wyprawa;
+select u.nazwa from (select u.id_wyprawy, k.nazwa from kreatura k left join uczestnicy u on u.id_uczestnika = k.idKreatury) u  where u.id_wyprawy is null;
+select w.nazwa, y.suma from (select x.id_wyprawy, sum(x.ilosc) as suma from (select w.id_wyprawy, e.ilosc from uczestnicy w join ekwipunek e on e.idKreatury = w.id_uczestnika) x group by id_wyprawy) y join wyprawa w on w.id_wyprawy =y.id_wyprawy;
+select w.nazwa, group_concat(k.nazwa), count(u.id_uczestnika) as ilosc from uczestnicy u join kreatura k on u.id_uczestnika = k.idKreatury join wyprawa w on w.id_wyprawy = u.id_wyprawy group by w.nazwa;
+select e.idEtapu, w.nazwa as wyprawa, s.nazwa as sektor, e.kolejnosc, w.data_rozpoczecia, k.nazwa as kierownik from etapy_wyprawy e join wyprawa w on w.id_wyprawy = e.idWyprawy join sektor s on s.id_sektora = e.sektor join (select w.nazwa as wyprawa, k.nazwa from wyprawa w join kreatura k on k.idKreatury = w.kierownik) k on k.wyprawa = w.nazwa order by data_rozpoczecia, kolejnosc;
+select s.nazwa, ifnull(i.ilosc_odwiedzin,0) as ilosc_odwiedzin from sektor s left join (select sektor, count(idEtapu) as ilosc_odwiedzin from etapy_wyprawy group by sektor order by sektor) i on s.id_sektora = i.sektor;
