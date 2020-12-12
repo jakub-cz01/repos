@@ -11,4 +11,6 @@ select kreatura.nazwa as nazwaKreatury, zasob.nazwa as nazwaZasobu from ekwipune
 select kreatura.nazwa from ekwipunek join kreatura on kreatura.idKreatury = ekwipunek.idKreatury join zasob on zasob.idZasobu = ekwipunek.idZasobu and zasob.rodzaj = 'jedzenie' order by kreatura.dataUr desc limit 5;
 select k.nazwa as Kreatura_1, l.nazwa as Kreatura_2 from kreatura k join kreatura l on k.idKreatury = l.idKreatury + 5;
 select k.rodzaj, avg(z.waga) as sredniaWagaZasobow from ekwipunek e join kreatura k on k.idKreatury = e.idKreatury and k.rodzaj != 'malpa' and k.rodzaj != 'waz' join zasob z on z.idZasobu = e.idKreatury group by k.rodzaj having sum(e.ilosc) < 30;
+select min.rodzaj, min.najmlodsza, min.dataUr, max.najstarsza, max.dataUr from (select k.rodzaj, l.nazwa as najmlodsza, k.dataUr from (select k.rodzaj, max(k.dataUr) as dataUr from kreatura k group by rodzaj) k join kreatura l on l.dataUr = k.dataUr) min join (select m.rodzaj, l.nazwa as najstarsza, m.dataUr from (select m.rodzaj, min(m.dataUr) as dataUr from kreatura m group by rodzaj) m join kreatura l on l.dataUr = m.dataUr) max on max.rodzaj = min.rodzaj;
+
 
