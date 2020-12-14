@@ -1,0 +1,6 @@
+create procedure waga_spr (inout waga int) begin if waga<=0 then set waga = 1; end if; end
+create trigger waga_m before update on kreatura for each row call waga_spr(new.waga)
+create trigger waga_n before insert on kreatura for each row call waga_spr(new.waga)
+create table archiwum_wypraw (id_wyprawy int, nazwa varchar(200), data_rozpoczecia date, data_zakonczenia date, kierownik varchar(40))
+create procedure kierownik(in kierownik_i int,  out kierownik_v varchar(40)) begin select kreatura.nazwa into kierownik_v where kreatura.idKreatury = kierownik_i; end
+create trigger kopia before delete on wyprawa for each row begin call kierownik(old.kierownik, @kierownik); INSERT INTO archiwum_wypraw values (old.id_wyprawy, old.nazwa, old.data_rozpoczecia, old.data_zakonczenia, @kierownik); end;
