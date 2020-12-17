@@ -4,3 +4,8 @@ create trigger waga_n before insert on kreatura for each row call waga_spr(new.w
 create table archiwum_wypraw (id_wyprawy int, nazwa varchar(200), data_rozpoczecia date, data_zakonczenia date, kierownik varchar(40))
 create procedure kierownik(in kierownik_i int,  out kierownik_v varchar(40)) begin select kreatura.nazwa into kierownik_v from kreatura where kreatura.idKreatury = kierownik_i; end
 create trigger kopia before delete on wyprawa for each row begin call kierownik(old.kierownik, @kierownik); INSERT INTO archiwum_wypraw values (old.id_wyprawy, old.nazwa, old.data_rozpoczecia, old.data_zakonczenia, @kierownik); end;
+CREATE PROCEDURE eliksir_sily(in kreatura_id int) begin  update kreatura set kreatura.udzwig = kreatura.udzwig*1.2 where kreatura.idKreatury = kreatura_id;  end
+CREATE function wielkie_litery(tekst varchar(500)) returns varchar(500) begin  declare duzy_tekst varchar(500); set duzy_tekst = upper(tekst); return duzy_tekst; end
+create table system_alarmowy (id_alarmu int primary key, wiadomosc varchar(200))
+create trigger alarm after update on wyprawa for each row  begin  if exists(select * from (select w.id_wyprawy, u.id_uczestnika from (select w.id_wyprawy, e.sektor from wyprawa w join etapy_wyprawy e on e.idWyprawy = w.id_wyprawy and e.sektor = 7) w join uczestnicy u on u.id_wyprawy = w.id_wyprawy and u.id_uczestnika = 14) w where  w.id_wyprawy = new.id_wyprawy) then insert into system_alarmowy (wiadomosc) values ("Teściowa nadchodzi !!!"); END IF; end
+CREATE PROCEDURE udzwig(out suma int, out srednia int, out maks int) begin  select sum(kreatura.udzwig) from kreatura into suma; select avg(kreatura.udzwig) from kreatura into srednia; select max(kreatura.udzwig) from kreatura into maks;  end
