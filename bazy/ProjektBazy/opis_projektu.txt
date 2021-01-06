@@ -1,0 +1,69 @@
+Opis projektu z przedmiotu Bazy danych
+Autor: Jakub Czajkowski
+Nr indeksu: 162700
+I rok ISI grupa 1
+Temat: dealer narkotykowy
+
+Baza zawarta w projekcie może przechowywać dane dotyczące właściwie dowolnej działalności handlowej.
+Zbiera informacje o klientach, pracownikach i dostawcach, a także o transakcjach między nimi.
+Zawiera widoki zestawiające zebrane dane na różne sposoby - oblicza np. bilans finansowy ujęty z kilku
+perspektyw, czy liczy ilość transakcji na pracownika.
+Z uzasadnionych względów ocenzurowałem nazwy towarów, jednostki i role pracowników, nieocenzurowana
+wersja znajduje się w mojej bazie w serwerze z uczelni.
+
+Opis elementów bazy:
+
+Tabele: 
+-dostawcy - zawiera pseudonimy dostawców
+-klienci - zawiera pseudonimy klientów
+-dostawy - zawiera informacje o dostawcy i datę dostawy
+-sprzedaże - zawiera informacje o sprzedaży i datę sprzedaży
+-towary - zawiera informacje o sprzedawanych towarach, ich wadze w magazynie i cenach dostawy/sprzedaży
+-wspólnicy - zawiera pseudonimy wspólników, ich rolę oraz udział w zyskach
+-towary_dostawy - tabela wynikająca z relacji wiele do wielu - dla danego id dostawy określa id dostarczonego towaru
+-towary_sprzedaże - analogicznie do towary_dostawy
+
+Procedury:
+-dostawa - dodaje wagę towaru dostarczonego/zwróconego do tabeli towary
+-sprzedaż - odejmuje wagę towaru sprzedanego/zwróconego do tabeli towary
+-zmiana_udziału - przelicza udział w zyskach z tabeli wspólnicy w przypadku dodania/usunięcia wspólnika (aktywacja nie jest automatyczna)
+
+Wyzwalacze:
+-rm_dostawa - przed usunięciem w tabeli dostawy usuwa wszystkie dane o odpowiedniej dostawie w tabeli towary_dostawy 
+-rm_sprzedaż - przed usunięciem w tabeli sprzedaże usuwa wszystkie dane o odpowiedniej sprzedaży w tabeli towary_sprzedaże 
+-mod_dostawa - przed modyfikacją danych w tabeli dostawy, modyfikuje te dane w tabeli towary_dostawy, by były zgodne, działanie ograniczone ze względu na klucze obce
+-mod_sprzedaż - przed modyfikacją danych w tabeli sprzedaże, modyfikuje te dane w tabeli towary_sprzedaże, by były zgodne, działanie ograniczone ze względu na klucze obce
+-del_dostawa - przed usunięciem w tabeli towary_dostawy, aktualizuje wagę towaru w magazynie, jeżeli było go wystarczająco dużo
+-del_sprzedaż - przed usunięciem w tabeli towary_sprzedaże, aktualizuje wagę towaru w magazynie
+-nowa_dostawa - przed dodaniem informacji o dostawie w tabeli towary_dostawy, aktualizuje wagę towaru w magazynie
+-nowa_sprzedaż - przed dodaniem informacji o sprzedaży w tabeli towary_sprzedaże, aktualizuje wagę towaru w magazynie, jeżeli było go wystarczająco dużo
+-mod_waga_dostawa - sprawdza czy modyfikacja danych dostawy jest wykonalna i aktualizuje wagę towaru w magazynie
+-mod_waga_sprzedaż - sprawdza czy modyfikacja danych sprzedaży jest wykonalna i aktualizuje wagę towaru w magazynie
+
+Funkcje:
+-ocena_kontrahenta - ocenia klienta lub dostawcę na podstawie ilości pieniędzy w transakcjach z nim
+-ocena_wspólnika - ocenia wspólnika na podstawie liczby obsłużonych sprzedaży i dostaw
+-polski_miesiąc - zamienia liczbę naturalną z przedziału <1;12> na polską nazwę miesiąca
+-przydział_pensji - oblicza pensję na podstawie udziału w zyskach i całkowitego zysku wspólników
+
+Widoki:
+-bilans_całkowity - suma zysków i wydatków z całego okresu
+-bilans_miesięczny - suma zysków i wydatków na dany miesiąc, jeżeli doszło w nim do transakcji
+-bilans_towary - suma zysków i wydatków na dany towar z całego okresu
+-dostawcy_dostawy - ilość dostaw na dostawcę
+-dostawcy_obrót - suma pieniędzy z transakcji z dostawcą
+-dostawcy_ocena - ocena dostawcy na podstawie obrotu
+-klienci_obrót - suma pieniędzy z transakcji z klientem
+-klienci_ocena - ocena klienta na podstawie obrotu
+-klienci_sprzedaże - ilość transakcji z klientem
+-ocena_wspólnika - ocena wspólnika na podstawie ilości pracy (transakcji z klientami i dostawcami)
+-stan_początkowy - widok na stan początkowy firmy
+-widok_dostaw - widok dostaw zamieniający id poszczególnych przedmiotów/osób z tabeli towary_dostawy na nazwy
+-widok_sprzedaży - widok sprzedaży zamieniający id poszczególnych przedmiotów/osób z tabeli towary_sprzedaże na nazwy
+-wspólnicy_dostawy - ilość dostaw obsłużonych przez wspólnika
+-wspólnicy_sprzedaże - ilość sprzedaży obsłużonych przez wspólnika
+-wspólnicy_pensja - przydział pensji na wspólnika na podstawie ich udziału
+-wspólnicy_spotkania - rejestr wszystkich unikalnych spotkań wspólników z klientami lub dostawcami posortowany wg daty
+-wydatki_towary - widok wydatków na dany towar
+-zyski_towary - widok zysków na dany towar
+-zysk_potencjał - potencjalny zysk na podstawie bilansu całkowitego, wartości początkowej magazynu i jego wartości końcowej
